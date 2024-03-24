@@ -14,10 +14,6 @@ const DeckSchema = new mongoose.Schema({
         ref: 'User',
         required: "User required"
     },
-    questions: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Question'
-    }],
     isTemporary: {
         type: Number
     },
