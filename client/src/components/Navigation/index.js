@@ -1,0 +1,58 @@
+import { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+// context
+import AppContext from '../../store/AppContext';
+// components
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
+import Buttons from '../Buttons';
+
+export default function Navigation() {
+    const navigate = useNavigate();
+    const { user, setUser, setJwt, setAppMsg } = useContext(AppContext);
+    const handleLogout = async () => {
+        localStorage.removeItem("FA_User");
+        setUser({});
+        setJwt("");
+        setAppMsg({ show: true, variant: "primary", text: "See you next time!" })
+        navigate('/login');
+    }
+    return (
+        <Navbar bg="light" expand="lg">
+            <Container>
+                <Link className="navbar-brand" to="/decks">Flash_App</Link>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+                    <Nav>
+                        {user && user.email ? (
+                            <>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/question">Questions</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link to="#" className="nav-link">Hi {user.firstName}!</Link>
+                                </li>
+                                <li className="nav-item"
+                                    onClick={() => handleLogout()}
+                                >
+                                    {/* eslint-disable */}
+                                    <a href="#" className="nav-link">
+                                        LOGOUT
+                                    </a>
+                                    {/* eslint-enable */}
+                                </li>
+                            </>
+                        ) : (
+                            <>
+                                <li className="nav-item">
+                                    <Link to="/" className="nav-link"><Buttons btnText={"LOGIN/REGISTER"} btnAlign={"right"} variant={"outline-primary"} /></Link>
+                                </li>
+                            </>
+                        )}
+                    </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
+    )
+}

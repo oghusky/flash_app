@@ -1,0 +1,10 @@
+.App {
+  background-color: #eef;
+  min-height: 100vh;
+}
+
+button.navbar-toggler.collapsed,
+button.navbar-toggler {
+  border: none;
+  outline: none;
+}
