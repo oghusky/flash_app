@@ -1,4 +1,5 @@
-const Deck = require("../models/Deck");
+const Deck = require("../models/Deck"),
+    Question = require("../models/Question");
 
 exports.createDeck = async (req, res) => {
     try {
@@ -51,7 +52,7 @@ exports.getDecks = async (req, res) => {
 exports.getDeckByID = async (req, res) => {
     try {
         const { deckID } = req.query;
-        const deck = await Deck.findById(deckID).populate("user");
+        const deck = await Deck.findById(deckID).populate("user").populate("questions");
         if (deck) return res.status(200).json({ msg: "Found deck", deck });
         else return res.status(404).json({ msg: "Unable to find deck" })
     } catch (e) {
@@ -63,9 +64,8 @@ exports.updateDeckByID = async (req, res) => {
     try {
         const { deckID } = req.query;
         const data = req.body;
-        let deck = await (await Deck.findOne({ user: req.user })).populate("user");
+        let deck = await (await Deck.findOne({ _id: deckID, user: req.user })).populate("user");
         if (!deck) return res.status(404).json({ msg: "Unable to find deck" });
-        if (String(deck.user._id) !== String(req.user._id)) return res.status(403).json({ msg: "You aren't authorized to do that" });
         deck = await Deck.findOneAndUpdate({ _id: deckID, user: req.user }, { "$set": data }, { new: true });
         return res.status(200).json({ msg: "Deck updated", deck });
     } catch (e) {
@@ -76,9 +76,9 @@ exports.updateDeckByID = async (req, res) => {
 exports.deleteDeckByID = async (req, res) => {
     try {
         const { deckID } = req.query;
-        let deck = await (await Deck.findOne({ user: req.user })).populate("user");
+        let deck = await (await Deck.findOne({ _id: deckID, user: req.user })).populate("user");
+        await Question.deleteMany({ deck: deckID, user: req.user._id });
         if (!deck) return res.status(404).json({ msg: "Unable to find deck" });
-        if (String(deck.user._id) !== String(req.user._id)) return res.status(403).json({ msg: "You aren't authorized to do that" });
         deck = await Deck.findOneAndDelete({ _id: deckID, user: req.user });
         return res.status(200).json({ msg: "Deck deleted" });
     } catch (e) {

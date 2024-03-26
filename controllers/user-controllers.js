@@ -1,10 +1,12 @@
 const User = require("../models/User"),
+    Deck = require("../models/Deck"),
+    Question = require("../models/Question"),
     bcrypt = require("bcryptjs"),
     { signToken } = require("../utils/auth"),
     { checkPassword } = require("../utils/checkPassword"),
     { checkEmail } = require("../utils/checkEmail");
 exports.createUser = async (req, res) => {
-    const { email, password, firstName, lastName, signUpGoogle, tokenSub, type, isAdult } = req.body;
+    const { email, password, firstName, lastName, signUpGoogle, tokenSub, type, isAdult, userName } = req.body.register;
     try {
         let pwdToSave;
         if (!password && signUpGoogle) {
@@ -17,12 +19,12 @@ exports.createUser = async (req, res) => {
         if (!pwdToSave) return res.status(500).json({ msg: "Password required" });
         if (!checkPassword(pwdToSave)) return res.status(500).json({ msg: "Password isn't valid" });
         if (isAdult === null || isAdult === undefined) return res.status(500).json({ msg: "Must confirm if you are over 18" });
-        if (!firstName && !lastName) return res.status(500).json({ msg: "First and last name required" });
+        if (!firstName || !lastName) return res.status(500).json({ msg: "First and last name required" });
         const user = await User.findOne({ email });
         if (user) {
             return res.status(500).json({ msg: "USER WITH THAT INFO EXISTS" });
         }
-        const newUser = await User.create({ email, password: pwdToSave, firstName, lastName, type, isAdult })
+        const newUser = await User.create({ email, password: pwdToSave, firstName, lastName, type, isAdult, userName });
         const token = await signToken(newUser);
         return res.status(201).json({
             token,
@@ -42,7 +44,7 @@ exports.createUser = async (req, res) => {
 }
 
 exports.login = async (req, res) => {
-    const { email, password, signUpGoogle, tokenSub, firstName, lastName } = req.body;
+    const { email, password, signUpGoogle, tokenSub, firstName, lastName } = req.body.login;
     try {
         let pwdToSave;
         if (!password && signUpGoogle) {
@@ -117,6 +119,8 @@ exports.deleteUser = async (req, res) => {
     const { userId } = req.params;
     try {
         const user = await User.findOneAndDelete({ _id: userId });
+        await Deck.deleteMany({ user: userID });
+        await Question.deleteMany({ user: userID });
         if (user) return res.status(200).json({ msg: "USER DELETED" });
     } catch (err) {
         console.log(err);

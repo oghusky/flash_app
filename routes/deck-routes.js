@@ -1,5 +1,5 @@
 const router = require('express').Router(),
-    { isLoggedIn, isOwner } = require("../middleware"),
+    { isLoggedIn } = require("../middleware"),
     {
         createDeck,
         getDecks,

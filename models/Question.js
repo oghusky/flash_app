@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 // Define Question Schema
 const QuestionSchema = new mongoose.Schema({
-    questionText: {
+    question: {
         type: String,
         required: "Question required"
     },
@@ -11,7 +11,13 @@ const QuestionSchema = new mongoose.Schema({
     },
     deck: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Deck'
+        ref: 'Deck',
+        required: true
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 });
 

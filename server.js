@@ -5,7 +5,8 @@ const morgan = require('morgan'),
     connectDB = require('./config/db'),
     userRoutes = require("./routes/user-routes"),
     deckRoutes = require("./routes/deck-routes"),
-    PORT = process.env.PORT || 3000;
+    questionRoutes = require("./routes/question-routes"),
+    PORT = process.env.PORT || 3001;
 
 // connect to DB
 connectDB();
@@ -17,6 +18,7 @@ app.use(express.json());
 // setup routes
 app.use("/api/users", userRoutes);
 app.use("/api/decks", deckRoutes);
+app.use("/api/questions", questionRoutes);
 
 // Define a test route
 app.get('/test', async (req, res) => {
