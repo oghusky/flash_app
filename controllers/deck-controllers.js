@@ -6,6 +6,7 @@ exports.createDeck = async (req, res) => {
         const { name, description, isForAdults } = req.body;
         if (!name) return res.status(500).json({ msg: "Name of deck required" });
         if (!description) return res.status(500).json({ msg: "Deck description required" });
+        if (description && description.length > 50) return res.status(500).json({ msg: "Description must be 50 characters or less" });
         if (isForAdults === null || isForAdults === undefined) return res.status(500).json({ msg: "Is this deck for adults" });
         const deck = await Deck.create({ name, description, isForAdults, user: req.user._id });
         return res.status(201).json({ msg: "Deck created", deck });
