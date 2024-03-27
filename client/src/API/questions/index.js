@@ -11,6 +11,17 @@ const QuestionAPI = {
         } catch (e) {
             return e.message;
         }
+    },
+    deleteQuestion: async (id, jwt) => {
+        try {
+            return axios.delete(`/questions/id?questionID=${id}`, {
+                headers: {
+                    authorization: jwt
+                }
+            });
+        } catch (e) {
+            return e.message
+        }
     }
 }
 

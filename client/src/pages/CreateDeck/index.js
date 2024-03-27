@@ -12,17 +12,22 @@ import DeckAPI from '../../API/decks';
 import AppContext from '../../store/AppContext';
 
 export default function CreateDeck() {
-    const navigate = useNavigate();
     const { jwt, decks, setDecks, setAppMsg } = useContext(AppContext);
+    const [wordCount, setWordCount] = useState(50);
     const [deckInfo, setDeckInfo] = useState({
         name: "",
         description: "",
         isForAdults: false,
     });
-    const [wordCount, setWordCount] = useState(50);
+    const navigate = useNavigate();
+    const isValidDescription = /^[a-zA-Z0-9,\-. ]+$/.test(deckInfo.description);
+    const isValidName = /^[a-zA-Z0-9,\-. ]+$/.test(deckInfo.name);
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!deckInfo.name || !deckInfo.description) setAppMsg({ show: true, variant: "danger", text: "Deck must have name and description!" });
+        if (!deckInfo.name || !deckInfo.description) {
+            setAppMsg({ show: true, variant: "danger", text: "Deck must have name and description!" });
+            return;
+        }
         try {
             const res = await DeckAPI.createNewDeck(deckInfo, jwt);
             if (res.status === 201) {
@@ -38,6 +43,12 @@ export default function CreateDeck() {
         const { name, value } = event.target;
         if (name === "description" && wordCount >= 0) {
             setWordCount(prevCount => --prevCount);
+        }
+        if (name === "description" || name === "name") {
+            const isValid = /^[a-zA-Z0-9,\-. ]+$/.test(value);
+            if (!isValid) {
+                setAppMsg({ show: true, variant: "danger", text: "Name and description can only contain alphanumeric characters, commas, hyphens, and periods." });
+            }
         }
         setDeckInfo({ ...deckInfo, [name]: value })
     }
@@ -76,7 +87,12 @@ export default function CreateDeck() {
                     label={"Is this deck for adults"}
                     onChange={hanldeCheckboxChange}
                 />
-                <Buttons btnText={"Submit"} type={"submit"} variant={"primary"} />
+                <Buttons
+                    variant={"primary"}
+                    btnText={"Submit"}
+                    type={"submit"}
+                    disabled={!isValidName || !isValidDescription}
+                />
             </Form>
         </>
     );

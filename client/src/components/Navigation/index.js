@@ -28,10 +28,7 @@ export default function Navigation() {
                         {user && user.email ? (
                             <>
                                 <li className="nav-item">
-                                    <Link className="nav-link" to="/question">Questions</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link to="#" className="nav-link">Hi {user.firstName}!</Link>
+                                    <Link to={`/user/id/${user._id}`} className="nav-link">Hi {user.firstName}!</Link>
                                 </li>
                                 <li className="nav-item"
                                     onClick={() => handleLogout()}

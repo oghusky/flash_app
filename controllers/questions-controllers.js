@@ -94,10 +94,10 @@ exports.deleteQuestionByQuestionID = async (req, res) => {
     try {
         const { questionID } = req.query;
         let question = await (await Question.findOne({ _id: questionID, user: req.user })).populate("user");
-        await Deck.findOneAndUpdate({ _id: question.deck }, { "$pull": { questions: questionID } }, { new: true });
+        const deck = await Deck.findOneAndUpdate({ _id: question.deck }, { "$pull": { questions: questionID } }, { new: true }).populate("user");
         if (!question) return res.status(404).json({ msg: "Unable to find question" });
         await question.deleteOne();
-        return res.status(200).json({ msg: "Question deleted" });
+        return res.status(200).json({ msg: "Question deleted", deck });
     } catch (e) {
         return res.status(500).json({ msg: e.message });
     }

@@ -8,3 +8,14 @@ button.navbar-toggler {
   border: none;
   outline: none;
 }
+
+@media screen and (min-width: 821px) {
+  .container:not(:first-child) {
+    width: 75% !important;
+    margin: 0 auto;
+  }
+  .container-fluid:not(:first-child) {
+    width: 75% !important;
+    margin: 0 auto;
+  }
+}

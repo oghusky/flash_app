@@ -20,14 +20,20 @@ export default function AddQuestion() {
     ]);
     const handleSubmit = async (e) => {
         e.preventDefault();
+        let allValidQuestions;
+        questions.forEach(q => {
+            if (!q.question || !q.answer) {
+                setAppMsg({ show: true, variant: "danger", text: "You must enter a question and answer for each entry" });
+                return;
+            }
+            allValidQuestions = true;
+        })
         try {
-            const res = await QuestionAPI.createNewQuestion(params?.deckID, questions, jwt);
-            if (res.status === 201) {
-                setAppMsg({ show: true, variant: "success", text: "Questions created!" })
-                navigate(`/deck/id/${params?.deckID}`);
-            } else {
-                console.log("bloop")
-                setAppMsg({ show: true, variant: "danger", text: res.data.msg })
+            if (allValidQuestions) {
+                const res = await QuestionAPI.createNewQuestion(params?.deckID, questions, jwt);
+                if (res.status === 201) {
+                    navigate(`/deck/id/${params?.deckID}`);
+                }
             }
         } catch (e) {
             return e.message
