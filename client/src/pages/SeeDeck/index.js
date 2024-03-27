@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Container, Button, Card, Row, Col } from "react-bootstrap";
+import { Container, Button, Card } from "react-bootstrap";
 import DeckAPI from "../../API/decks";
 import AppContext from "../../store/AppContext";
 import { Helmet } from 'react-helmet';

@@ -18,15 +18,17 @@ export default function CreateDeck() {
         name: "",
         description: "",
         isForAdults: false,
-    })
+    });
+    const [wordCount, setWordCount] = useState(50);
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!deckInfo.name || !deckInfo.description) setAppMsg({ show: true, variant: "danger", text: "Deck must have name and description!" });
         try {
             const res = await DeckAPI.createNewDeck(deckInfo, jwt);
             if (res.status === 201) {
                 setDecks([...decks, res.data.deck]);
                 setAppMsg({ show: true, variant: "success", text: "Deck created!" });
-                navigate('/decks');
+                navigate(`/deck/id/${res.data.deck._id}`);
             } else {
                 setAppMsg({ show: true, variant: "danger", text: res.response.data.msg });
             }
@@ -34,6 +36,9 @@ export default function CreateDeck() {
     }
     const handleUserInputChange = (event) => {
         const { name, value } = event.target;
+        if (name === "description" && wordCount >= 0) {
+            setWordCount(prevCount => --prevCount);
+        }
         setDeckInfo({ ...deckInfo, [name]: value })
     }
     const hanldeCheckboxChange = (event) => {
@@ -59,8 +64,10 @@ export default function CreateDeck() {
                     id={'deckDescription'}
                     name={'description'}
                     label={'Deck Description'}
-                    placeholder={'Enter deck description'}
+                    placeholder={'Enter brief description'}
                     onChange={handleUserInputChange}
+                    underInput={wordCount === 50 ? `50 characters left` : `${wordCount} characters left`}
+                    maxLength={50}
                 />
                 <CheckInputs
                     id={"isForAdults"}

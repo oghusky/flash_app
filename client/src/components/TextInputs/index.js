@@ -1,6 +1,6 @@
 import { Form } from 'react-bootstrap';
 
-export default function TextInputs({ label, type, placeholder, name, onChange, value, ...props }) {
+export default function TextInputs({ label, type, placeholder, name, onChange, value, underInput, ...props }) {
     return (
         <Form.Group>
             <Form.Label>{label}</Form.Label>
@@ -12,6 +12,7 @@ export default function TextInputs({ label, type, placeholder, name, onChange, v
                 placeholder={placeholder}
                 {...props}
             />
+            <Form.Text>{underInput}</Form.Text>
         </Form.Group>
     )
 }

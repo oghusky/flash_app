@@ -20,7 +20,6 @@ export default function UserProfile() {
         getUserInfo(params?.userID, jwt);
     }, [params, jwt])
 
-    console.log({ profile });
     return (
         <>
             <Helmet><title>{`Flash_App | ${profile?.userName}'s Profile`}</title></Helmet>
