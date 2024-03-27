@@ -23,6 +23,17 @@ const DeckAPI = {
         try {
             return axios.get(`/decks/id?deckID=${id}`)
         } catch (e) { return e.message }
+    },
+    deleteDeckByDeckID: async (id, jwt) => {
+        try {
+            return axios.delete(`/decks/id?deckID=${id}`, {
+                headers: {
+                    authorization: jwt
+                }
+            });
+        } catch (e) {
+            return e.message;
+        }
     }
 }
 

@@ -12,9 +12,11 @@ export default function SeeDeck() {
     const params = useParams();
     const navigate = useNavigate();
     const [deck, setDeck] = useState({});
+    const [decksID, setDecksID] = useState("");
     const [questionID, setQuestionID] = useState("");
     const { setAppMsg, user, jwt } = useContext(AppContext);
     const [deleteQuestionModalShow, setDeleteQuestionModalShow] = useState(false);
+    const [deleteDeckModalShow, setDeleteDeckModalShow] = useState(false);
     const getDeck = async id => {
         const res = await DeckAPI.getDeckByDeckID(id);
         if (res.status === 200) {
@@ -26,10 +28,15 @@ export default function SeeDeck() {
         getDeck(params?.deckID);
     }, [params?.deckID]);
     const handleClose = () => setDeleteQuestionModalShow(false);
+    const handleDeckModalClose = () => setDeleteDeckModalShow(false);
     const handleQuestionDeleteClick = qid => {
         setQuestionID(qid);
         setDeleteQuestionModalShow(true);
     };
+    const handleDeleteDeckClick = did => {
+        setDecksID(did);
+        setDeleteDeckModalShow(true);
+    }
     const handleSubmitDeleteQuestionClick = async () => {
         try {
             const res = await QuestionAPI.deleteQuestion(questionID, jwt);
@@ -41,8 +48,15 @@ export default function SeeDeck() {
             return e.message
         }
     }
-    const handleDeleteDeckClick = did => {
-        console.log("Delete Deck: ", did)
+    const handleSubmitDeleteDeckClick = async () => {
+        try {
+            const res = await DeckAPI.deleteDeckByDeckID(params?.deckID, jwt);
+            if (res.status === 200) {
+                navigate("/decks");
+            }
+        } catch (e) {
+            return e.message;
+        }
     }
     return (
         <>
@@ -100,6 +114,14 @@ export default function SeeDeck() {
                 show={deleteQuestionModalShow}
                 close={<Buttons btnText={"Cancel"} onClick={handleClose} variant={"outline-danger"} />}
                 save={<Buttons btnText={"Delete"} variant={"danger"} onClick={handleSubmitDeleteQuestionClick} />}
+                closeVariant={"none"}
+                saveVariant={"none"}
+            />
+            <Modals
+                title="Are you sure you want to delete this deck?"
+                show={deleteDeckModalShow}
+                close={<Buttons btnText={"Cancel"} onClick={handleClose} variant={"outline-danger"} />}
+                save={<Buttons btnText={"Delete"} variant={"danger"} onClick={handleSubmitDeleteDeckClick} />}
                 closeVariant={"none"}
                 saveVariant={"none"}
             />
