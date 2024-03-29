@@ -7,15 +7,15 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Navigation from './components/Navigation';
 import AddQuestion from './pages/AddQuestion';
 import UserProfile from './pages/UserProfile';
+import EditProfile from './pages/EditProfile';
 import CreateDeck from './pages/CreateDeck';
 import MsgDiv from './components/MsgDiv';
 import Register from './pages/Register';
+import Welcome from './pages/Welcome';
 import SeeDeck from './pages/SeeDeck';
+import RunDeck from './pages/RunDeck';
 import Login from './pages/Login';
 import Decks from './pages/Decks';
-// import Login from './pages/Login';
-// import Questions from './components/Questions';
-import Welcome from './pages/Welcome';
 // context
 import AppContext from './store/AppContext';
 function App() {
@@ -80,10 +80,31 @@ function App() {
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/decks" element={<Decks />} />
             <Route exact path="/register" element={<Register />} />
-            <Route exact path="/create_deck" element={<CreateDeck />} />
             <Route exact path="/deck/id/:deckID" element={<SeeDeck />} />
             <Route exact path="/user/id/:userID" element={<UserProfile />} />
-            <Route exact path="/deck/add_question/:deckID" element={<AddQuestion />} />
+            <Route exact path="/create_deck" element={
+              <ProtectedRoute>
+                <CreateDeck />
+              </ProtectedRoute>
+            } />
+            <Route exact path="/deck/run/:deckID" element={
+              <ProtectedRoute>
+                <RunDeck />
+              </ProtectedRoute>
+            } />
+            <Route exact path="/user/edit/:userID" element={
+              <ProtectedRoute>
+                <EditProfile />
+              </ProtectedRoute>
+            } />
+            <Route exact path="/deck/add_question/:deckID" element={
+              <ProtectedRoute>
+                <AddQuestion />
+              </ProtectedRoute>
+            } />
+            {/* <Route exact path="/deck/run/:deckID" element={<RunDeck />} /> */}
+            {/* <Route exact path="/user/edit/:userID" element={<EditProfile />} /> */}
+            {/* <Route exact path="/deck/add_question/:deckID" element={<AddQuestion />} /> */}
           </Routes>
         </AppContext.Provider>
       </Router>

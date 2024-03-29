@@ -35,7 +35,8 @@ exports.createUser = async (req, res) => {
                 firstName: newUser.firstName,
                 lastName: newUser.lastName,
                 isVerified: newUser.isVerified,
-                userType: newUser.type
+                userType: newUser.type,
+                userName: newUser.userName
             },
         })
     } catch (err) {
@@ -65,7 +66,8 @@ exports.login = async (req, res) => {
                         firstName: user.firstName,
                         lastName: user.lastName,
                         userType: user.userType,
-                        isVerified: user.isVerified
+                        isVerified: user.isVerified,
+                        userName: user.userName,
                     },
                     msg: "FOUND USER",
                 });
@@ -81,7 +83,6 @@ exports.login = async (req, res) => {
 exports.findUserById = async (req, res) => {
     const { userId } = req.params;
     try {
-        console.log({ userId })
         const user = await User.findById(userId);
         if (user) return res.status(200).json({ msg: "Found user", user });
         else return res.status(404).json({ msg: "User not found" });
@@ -97,6 +98,8 @@ exports.updateUser = async (req, res) => {
             email: req.body.email,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
+            userName: req.body.userName,
+            password: req.body.password
         }
         const user = await User.findByIdAndUpdate(userId, data, { new: true });
         if (user) {
@@ -105,6 +108,7 @@ exports.updateUser = async (req, res) => {
                 email: user.email,
                 firstName: user.firstName,
                 lastName: user.lastName,
+                userName: user.userName,
                 isVerified: user.isVerified
             }
             const token = await signToken(user);
@@ -118,11 +122,13 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
     const { userId } = req.params;
     try {
+
+        await Question.deleteMany({ user: userId });
+        await Deck.deleteMany({ user: userId });
         const user = await User.findOneAndDelete({ _id: userId });
-        await Deck.deleteMany({ user: userID });
-        await Question.deleteMany({ user: userID });
         if (user) return res.status(200).json({ msg: "USER DELETED" });
-    } catch (err) {
-        console.log(err);
+        else return res.status(404).json({ msg: "User not found" });
+    } catch (e) {
+        console.log(e.message);
     }
 }

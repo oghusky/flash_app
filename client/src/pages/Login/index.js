@@ -30,8 +30,6 @@ export default function Login() {
                 token: response.data.token,
                 user: response.data.user
             }));
-            // const questions = await API.getQuestions(response.data.token);
-            // setQuestions(questions.data.questions);
             setJwt(response.data.token);
             setUser(response.data.user);
             navigate('/decks');

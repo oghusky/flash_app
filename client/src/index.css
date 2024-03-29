@@ -16,7 +16,9 @@ form,
 .question-item,
 .alert {
   width: 50%;
-  margin: 0 auto;
+  margin: 30px auto;
+  background-color: #fff;
+  padding: 25px;
 }
 .alert {
   position: absolute !important;

@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Container, Button, Card } from "react-bootstrap";
 import DeckAPI from "../../API/decks";
@@ -8,6 +8,9 @@ import Buttons from "../../components/Buttons";
 import Modals from "../../components/Modals";
 import QuestionAPI from "../../API/questions";
 import deleteSVG from "../../SVG/delete.svg";
+import favorited from '../../SVG/favheart.svg'
+import unfavorited from '../../SVG/openheart.svg'
+import FavoriteAPI from "../../API/favorites";
 export default function SeeDeck() {
     const params = useParams();
     const navigate = useNavigate();
@@ -15,18 +18,22 @@ export default function SeeDeck() {
     const [decksID, setDecksID] = useState("");
     const [questionID, setQuestionID] = useState("");
     const { setAppMsg, user, jwt } = useContext(AppContext);
-    const [deleteQuestionModalShow, setDeleteQuestionModalShow] = useState(false);
     const [deleteDeckModalShow, setDeleteDeckModalShow] = useState(false);
-    const getDeck = async id => {
-        const res = await DeckAPI.getDeckByDeckID(id);
+    const [deleteQuestionModalShow, setDeleteQuestionModalShow] = useState(false);
+    const [foundFavorite, setFoundFavorite] = useState(false);
+    const getDeck = async (deckID, userID) => {
+        let res
+        if (userID) res = await DeckAPI.getDeckByDeckID(deckID, userID);
+        else res = await DeckAPI.getDeckByDeckID(deckID, "");
         if (res.status === 200) {
             setDeck(res.data.deck);
+            if (res?.data?.favorite) setFoundFavorite(true);
         }
         else setAppMsg({ show: true, variant: "danger", text: res.response.data.msg });
     }
     useEffect(() => {
-        getDeck(params?.deckID);
-    }, [params?.deckID]);
+        getDeck(params?.deckID, user?._id);
+    }, [params?.deckID, jwt, user?._id]);
     const handleClose = () => setDeleteQuestionModalShow(false);
     const handleDeckModalClose = () => setDeleteDeckModalShow(false);
     const handleQuestionDeleteClick = qid => {
@@ -50,7 +57,7 @@ export default function SeeDeck() {
     }
     const handleSubmitDeleteDeckClick = async () => {
         try {
-            const res = await DeckAPI.deleteDeckByDeckID(params?.deckID, jwt);
+            const res = await DeckAPI.deleteDeckByDeckID(decksID, jwt);
             if (res.status === 200) {
                 navigate("/decks");
             }
@@ -58,6 +65,33 @@ export default function SeeDeck() {
             return e.message;
         }
     }
+    const handleFavoriteClick = useCallback(async deckID => {
+        try {
+            const res = await FavoriteAPI.postFavoriteByUserIDAndDeckID(deckID, jwt);
+            if (res.status === 201) {
+                const res = await DeckAPI.getAllDecks(user?._id);
+                setFoundFavorite(true);
+                if (res && res.status === 200) {
+                    let res = await DeckAPI.getDeckByDeckID(deckID, user?._id);
+                    setDeck(res.data.deck);
+                }
+            }
+        } catch (e) {
+            return e.message;
+        }
+    }, [jwt, user?._id])
+    const handleUnfavoriteClick = useCallback(async deckID => {
+        try {
+            const res = await FavoriteAPI.deleteFavoriteByUserIDAndDeckID(deckID, jwt);
+            setFoundFavorite(false);
+            if (res.status === 200) {
+                let res = await DeckAPI.getDeckByDeckID(deckID, user?._id);
+                setDeck(res.data.deck);;
+            }
+        } catch (e) {
+            return e.message;
+        }
+    }, [jwt, user?._id])
     return (
         <>
             <Helmet>
@@ -66,7 +100,15 @@ export default function SeeDeck() {
             <Container>
                 <Card className="my-3">
                     <Card.Header>
-                        <h2>{deck?.name}</h2>
+                        <div className="d-flex justify-content-between">
+                            <h2>{deck?.name}</h2>
+                            <div>
+                                {
+                                    jwt && foundFavorite ? <img src={favorited} alt={"favorites-heart"} onClick={() => handleUnfavoriteClick(deck?._id)} />
+                                        : jwt && !foundFavorite ? <img src={unfavorited} alt={"open-heart"} onClick={() => handleFavoriteClick(deck?._id)} />
+                                            : null}
+                            </div>
+                        </div>
                     </Card.Header>
                     <Card.Body>
                         <p><small>{deck?.isForAdults ? "May not be for children" : null}</small></p>
@@ -78,10 +120,14 @@ export default function SeeDeck() {
                                 <Link to={`/deck/add_question/${params?.deckID}`}>
                                     <Buttons className={"w-100"} btnText={"Add Questions"} variant={"primary"} />
                                 </Link>
+
                                 <Buttons className={"w-100"} btnText={"Delete Deck"} variant={"outline-danger"} onClick={() => handleDeleteDeckClick(deck?._id)} />
+
                             </div>
                             : null}
-                        <Button className="btn btn-dark my-1 w-100">Run &#x25B6;</Button>
+                        <Link to={`/deck/run/${params?.deckID}`}>
+                            <Button className="btn btn-dark my-1 w-100">Run &#x25B6;</Button>
+                        </Link>
                     </Card.Body>
                 </Card>
                 {deck?.questions?.length >= 1 ? (
@@ -120,7 +166,7 @@ export default function SeeDeck() {
             <Modals
                 title="Are you sure you want to delete this deck?"
                 show={deleteDeckModalShow}
-                close={<Buttons btnText={"Cancel"} onClick={handleClose} variant={"outline-danger"} />}
+                close={<Buttons btnText={"Cancel"} onClick={handleDeckModalClose} variant={"outline-danger"} />}
                 save={<Buttons btnText={"Delete"} variant={"danger"} onClick={handleSubmitDeleteDeckClick} />}
                 closeVariant={"none"}
                 saveVariant={"none"}

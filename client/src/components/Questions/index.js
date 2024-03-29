@@ -16,7 +16,7 @@ export default function Question({ item }) {
             }
         } catch (e) {
             setAppMsg({ show: true, variant: "danger", text: "Unable to delete question. Try again." });
-            console.log(e)
+            return e.message;
         }
     }
     return (

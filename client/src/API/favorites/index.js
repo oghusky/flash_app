@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const QuestionAPI = {
-    createNewQuestion: async (deckID, questions, jwt) => {
+const FavoriteAPI = {
+    getFavoriteByUserIDAndDeckID: async (deckID, jwt) => {
         try {
-            return axios.post(`/questions?deckID=${deckID}`, questions, {
+            return axios.get(`/favorites?deckID=${deckID}`, {
                 headers: {
                     authorization: jwt
                 }
@@ -12,20 +12,20 @@ const QuestionAPI = {
             return e.message;
         }
     },
-    deleteQuestion: async (id, jwt) => {
+    postFavoriteByUserIDAndDeckID: (deckID, jwt) => {
         try {
-            return axios.delete(`/questions/id?questionID=${id}`, {
+            return axios.post(`/favorites?deckID=${deckID}`, {}, {
                 headers: {
                     authorization: jwt
                 }
-            });
+            })
         } catch (e) {
-            return e.message
+            return e.message;
         }
     },
-    getQuestionsByDeckID: async (deckID, jwt) => {
+    deleteFavoriteByUserIDAndDeckID: (deckID, jwt) => {
         try {
-            return axios.get(`/questions?deckID=${deckID}`, {
+            return axios.delete(`/favorites?deckID=${deckID}`, {
                 headers: {
                     authorization: jwt
                 }
@@ -36,4 +36,4 @@ const QuestionAPI = {
     }
 }
 
-export default QuestionAPI;
+export default FavoriteAPI;

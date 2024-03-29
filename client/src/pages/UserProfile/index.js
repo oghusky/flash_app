@@ -1,7 +1,8 @@
 import { useEffect, useContext, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import AppContext from "../../store/AppContext";
 import { Container } from "react-bootstrap";
+import Buttons from "../../components/Buttons";
 import UserAPI from "../../API/users";
 import { Helmet } from "react-helmet";
 export default function UserProfile() {
@@ -18,14 +19,19 @@ export default function UserProfile() {
     }
     useEffect(() => {
         getUserInfo(params?.userID, jwt);
-    }, [params, jwt])
+    }, [params, jwt]);
 
     return (
         <>
             <Helmet><title>{`Flash_App | ${profile?.userName}'s Profile`}</title></Helmet>
             <Container>
-                <div className="p-3" style={{ backgroundColor: "#ffe", borderRadius: "10px 10px 10px 10px" }}>
-                    <h2>{profile?.userName}</h2>
+                <div className="my-3 p-3" style={{ backgroundColor: "#fff", borderRadius: "10px 10px 10px 10px" }}>
+                    <div className="d-flex justify-content-between">
+                        <h2>{profile?.userName}</h2>
+                        <Link to={`/user/edit/${profile?._id}`}>
+                            <Buttons btnText={"Edit Profile"} variant={"outline-primary"} />
+                        </Link>
+                    </div>
                     <p>Member since {new Date(profile?.createdAt).toLocaleDateString()}</p>
                 </div>
             </Container>

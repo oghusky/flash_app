@@ -25,6 +25,28 @@ const UserAPI = {
         } catch (e) {
             return e.message
         }
+    },
+    editUserByID: async (userID, data, jwt) => {
+        try {
+            return await axios.put(`/users/id/${userID}`, data, {
+                headers: {
+                    authorization: jwt
+                }
+            })
+        } catch (e) {
+            return e.message;
+        }
+    },
+    deleteUserByID: async (userID, jwt) => {
+        try {
+            return await axios.delete(`/users/id/${userID}`, {
+                headers: {
+                    authorization: jwt
+                }
+            })
+        } catch (e) {
+            return e.message;
+        }
     }
 };
 export default UserAPI;

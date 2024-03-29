@@ -67,6 +67,20 @@ UserSchema.pre('save', function (next) {
     });
 });
 
+// Hash password before updating
+UserSchema.pre('findOneAndUpdate', async function (next) {
+    const update = this.getUpdate();
+    if (!update.password) return next();
+
+    try {
+        const hashedPassword = await bcrypt.hash(update.password, 10);
+        update.password = hashedPassword;
+        next();
+    } catch (error) {
+        return next(error);
+    }
+});
+
 UserSchema.methods.comparePassword = function (candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
         if (err) return cb(err);

@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 const DeckAPI = {
-    getAllDecks: async () => {
+    getAllDecks: async userID => {
         try {
+            if (userID) return axios.get(`/decks?userID=${userID}`);
             return axios.get("/decks")
         } catch (e) {
             return e.message
@@ -19,9 +20,9 @@ const DeckAPI = {
             return e.message;
         }
     },
-    getDeckByDeckID: async id => {
+    getDeckByDeckID: async (deckID, userID) => {
         try {
-            return axios.get(`/decks/id?deckID=${id}`)
+            return axios.get(`/decks/id?deckID=${deckID}&userID=${userID}`)
         } catch (e) { return e.message }
     },
     deleteDeckByDeckID: async (id, jwt) => {

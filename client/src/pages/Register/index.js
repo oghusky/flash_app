@@ -11,7 +11,7 @@ import API from '../../API/users';
 // context
 import AppContext from '../../store/AppContext';
 export default function Register() {
-    const { setAppMsg } = useContext(AppContext);
+    const { setAppMsg, setUser, setJwt } = useContext(AppContext);
     const navigate = useNavigate();
     const [register, setRegister] = useState({
         password: '',
@@ -28,15 +28,21 @@ export default function Register() {
     }
 
     const hanldeCheckboxChange = (event) => {
-        const { checked, name } = event.target;setRegister({ ...register, [name]: checked });
+        const { checked, name } = event.target; setRegister({ ...register, [name]: checked });
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const response = await API.postRegister(register);
         if (response.status === 201) {
+            localStorage.setItem("FA_User", JSON.stringify({
+                token: response.data.token,
+                user: response.data.user
+            }));
+            setJwt(response.data.token);
+            setUser(response.data.user);
             setAppMsg({ show: true, variant: "success", text: "Registration success!" });
-            navigate('/login');
+            navigate('/decks');
         } else {
             setAppMsg({ show: true, variant: "danger", text: response.response.data.msg });
         }

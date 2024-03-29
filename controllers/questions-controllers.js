@@ -31,7 +31,6 @@ exports.createQuestion = async (req, res) => {
         await deck.save();
         return res.status(201).json({ msg: "Inserted questions", questions: newQuestions });
     } catch (e) {
-        console.log(e.message);
         return res.status(500).json({ msg: e.message })
     }
 }
@@ -52,7 +51,6 @@ exports.getQuestionsByDeckID = async (req, res) => {
 exports.getQuestionsByUserID = async (req, res) => {
     try {
         const { userID } = req.query;
-        console.log({ userID })
         const questions = await Question.find({ user: userID });
         if (questions.length < 1) return res.status(200).json({ msg: "This deck doesn't have any questions yet" });
         return res.status(200).json({ msg: "Found questions", questions });
@@ -94,7 +92,7 @@ exports.deleteQuestionByQuestionID = async (req, res) => {
     try {
         const { questionID } = req.query;
         let question = await (await Question.findOne({ _id: questionID, user: req.user })).populate("user");
-        const deck = await Deck.findOneAndUpdate({ _id: question.deck }, { "$pull": { questions: questionID } }, { new: true }).populate("user");
+        const deck = await Deck.findOneAndUpdate({ _id: question.deck }, { "$pull": { questions: questionID } }, { new: true }).populate("user").populate("questions");
         if (!question) return res.status(404).json({ msg: "Unable to find question" });
         await question.deleteOne();
         return res.status(200).json({ msg: "Question deleted", deck });
