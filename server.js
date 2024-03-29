@@ -5,6 +5,7 @@ const morgan = require('morgan'),
     connectDB = require('./config/db'),
     userRoutes = require("./routes/user-routes"),
     deckRoutes = require("./routes/deck-routes"),
+    searchRoutes = require('./routes/search-routes'),
     questionRoutes = require("./routes/question-routes"),
     favoriteRoutes = require("./routes/favorite-routes");
 PORT = process.env.PORT || 3001;
@@ -19,6 +20,7 @@ app.use(express.json());
 // setup routes
 app.use("/api/users", userRoutes);
 app.use("/api/decks", deckRoutes);
+app.use("/api/search", searchRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/favorites", favoriteRoutes);
 

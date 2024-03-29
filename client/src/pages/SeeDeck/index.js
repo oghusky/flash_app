@@ -21,7 +21,7 @@ export default function SeeDeck() {
     const [deleteDeckModalShow, setDeleteDeckModalShow] = useState(false);
     const [deleteQuestionModalShow, setDeleteQuestionModalShow] = useState(false);
     const [foundFavorite, setFoundFavorite] = useState(false);
-    const getDeck = async (deckID, userID) => {
+    const getDeck = useCallback(async (deckID, userID) => {
         let res
         if (userID) res = await DeckAPI.getDeckByDeckID(deckID, userID);
         else res = await DeckAPI.getDeckByDeckID(deckID, "");
@@ -30,10 +30,10 @@ export default function SeeDeck() {
             if (res?.data?.favorite) setFoundFavorite(true);
         }
         else setAppMsg({ show: true, variant: "danger", text: res.response.data.msg });
-    }
+    }, [setAppMsg])
     useEffect(() => {
         getDeck(params?.deckID, user?._id);
-    }, [params?.deckID, jwt, user?._id]);
+    }, [params?.deckID, jwt, user?._id, getDeck]);
     const handleClose = () => setDeleteQuestionModalShow(false);
     const handleDeckModalClose = () => setDeleteDeckModalShow(false);
     const handleQuestionDeleteClick = qid => {
@@ -104,8 +104,8 @@ export default function SeeDeck() {
                             <h2>{deck?.name}</h2>
                             <div>
                                 {
-                                    jwt && foundFavorite ? <img src={favorited} alt={"favorites-heart"} onClick={() => handleUnfavoriteClick(deck?._id)} />
-                                        : jwt && !foundFavorite ? <img src={unfavorited} alt={"open-heart"} onClick={() => handleFavoriteClick(deck?._id)} />
+                                    jwt && foundFavorite ? <img src={favorited} alt={"favorites-heart"} onClick={() => handleUnfavoriteClick(deck?._id)} style={{ cursor: "pointer" }} />
+                                        : jwt && !foundFavorite ? <img src={unfavorited} alt={"open-heart"} onClick={() => handleFavoriteClick(deck?._id)} style={{ cursor: "pointer" }} />
                                             : null}
                             </div>
                         </div>

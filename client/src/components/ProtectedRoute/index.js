@@ -1,15 +1,11 @@
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import AppContext from '../../store/AppContext';
 export default function ProtectedRoute({ children }) {
-    const navigate = useNavigate();
     const { jwt } = useContext(AppContext);
-    const sendToLogin = (jwt) => {
-        if (!jwt) navigate('/login');
-    }
     return (
         <div>
-            {jwt ? children : sendToLogin(jwt)}
+            {jwt ? children : <Navigate to={"/login"} replace />}
         </div>
     )
 }

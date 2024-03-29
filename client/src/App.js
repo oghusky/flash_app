@@ -81,7 +81,11 @@ function App() {
             <Route exact path="/decks" element={<Decks />} />
             <Route exact path="/register" element={<Register />} />
             <Route exact path="/deck/id/:deckID" element={<SeeDeck />} />
-            <Route exact path="/user/id/:userID" element={<UserProfile />} />
+            <Route exact path="/user/id/:userID" element={
+              <ProtectedRoute>
+                <UserProfile />
+              </ProtectedRoute>
+            } />
             <Route exact path="/create_deck" element={
               <ProtectedRoute>
                 <CreateDeck />
@@ -102,9 +106,6 @@ function App() {
                 <AddQuestion />
               </ProtectedRoute>
             } />
-            {/* <Route exact path="/deck/run/:deckID" element={<RunDeck />} /> */}
-            {/* <Route exact path="/user/edit/:userID" element={<EditProfile />} /> */}
-            {/* <Route exact path="/deck/add_question/:deckID" element={<AddQuestion />} /> */}
           </Routes>
         </AppContext.Provider>
       </Router>

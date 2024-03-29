@@ -1,9 +1,10 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 // components
 import { Helmet } from 'react-helmet';
+import { Link } from 'react-router-dom';
 import Buttons from '../../components/Buttons';
 import { Container, Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import SearchInput from '../../components/SearchInput';
 // API
 import DeckAPI from '../../API/decks';
 import FavoriteAPI from '../../API/favorites';
@@ -56,9 +57,16 @@ export default function Decks() {
         <>
             <Helmet><title>Flash_App | Decks</title></Helmet>
             <Container fluid>
-                {jwt ? <Link to="/create_deck">
-                    <Buttons btnText={"Create New Deck"} btnAlign={"center"} variant={"primary"} className={"my-3"} />
-                </Link> : <Buttons btnText={"Login to create new deck"} className={"my-3"} disabled />}
+                <div className='d-flex justify-content-around align-items-center'>
+                    {
+                        jwt ? <Link to="/create_deck" className='text-center'>
+                            <Buttons btnText={"Create New Deck"} btnAlign={"center"} variant={"primary"} className={"my-3"} />
+                        </Link> : <Link to={"#"} className='text-center' ><Buttons btnText={"Login to create new deck"} className={"my-3"} disabled /></Link>
+                    }
+                    <div>
+                        <SearchInput />
+                    </div>
+                </div>
                 <Row>
                     {decks?.map(deck => (
                         <Col key={deck?._id} lg={3} md={4} sm={6} xs={12} className={"my-2"}>
@@ -73,11 +81,11 @@ export default function Decks() {
                                 </div>
                                 {
                                     jwt && deck?.isFavorited ?
-                                        <div className='favorites-heart' onClick={() => handleUnfavoriteClick(deck?._id)}>
+                                        <div className='favorites-heart' onClick={() => handleUnfavoriteClick(deck?._id)} style={{ cursor: "pointer" }}>
                                             <img src={favorited} alt={"favorited-heart"} />
                                         </div>
                                         : jwt && !deck?.isFavorited ?
-                                            <div className='favorites-heart' onClick={() => handleFavoriteClick(deck?._id)}>
+                                            <div className='favorites-heart' onClick={() => handleFavoriteClick(deck?._id)} style={{ cursor: "pointer" }} >
                                                 <img src={unfavorited} alt={"open-heart"} />
                                             </div>
                                             : null

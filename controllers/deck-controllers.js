@@ -69,7 +69,7 @@ exports.getDeckByID = async (req, res) => {
         const { deckID, userID } = req.query;
         let favorite;
         const deck = await Deck.findById(deckID).populate("user").populate("questions");
-        if(userID) favorite = await Favorite.findOne({deck: deckID, user: userID})
+        if (userID) favorite = await Favorite.findOne({ deck: deckID, user: userID })
         if (deck) return res.status(200).json({ msg: "Found deck", deck, favorite });
         else return res.status(404).json({ msg: "Unable to find deck" })
     } catch (e) {
@@ -95,6 +95,7 @@ exports.deleteDeckByID = async (req, res) => {
         const { deckID } = req.query;
         let deck = await (await Deck.findOne({ _id: deckID, user: req.user })).populate("user");
         await Question.deleteMany({ deck: deckID, user: req.user._id });
+        await Favorite.deleteMany({ deck: deckID });
         if (!deck) return res.status(404).json({ msg: "Unable to find deck" });
         deck = await Deck.findOneAndDelete({ _id: deckID, user: req.user });
         return res.status(200).json({ msg: "Deck deleted" });

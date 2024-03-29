@@ -1,0 +1,25 @@
+.search-form {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+}
+
+.search-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px 0 0 5px;
+}
+
+.search-button {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 0 5px 5px 0;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.search-input:focus,
+.search-button:focus {
+  outline: none;
+}
