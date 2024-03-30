@@ -97,7 +97,7 @@ export default function Decks() {
                                     <Buttons size={"sm"} btnText={`${deck?.questions?.length} ${deck?.questions.length === 1 ? "Item" : "Items"}`} variant={"dark"} disabled />
                                 </div>
                                 <Link to={`/user/id/${deck?.user._id}`} style={{ textDecoration: "none", color: "#000" }}>
-                                    <p className={"mt-3 mb-0"}>{deck?.user?.userName ? `${deck?.user?.userName}` : `${deck?.user?.firstName} ${deck?.user?.lastName}`}</p>
+                                    <p className={"mt-3 mb-0 text"}>{deck?.user?.userName ? `${deck?.user?.userName}` : `${deck?.user?.firstName} ${deck?.user?.lastName}`}</p>
                                 </Link>
                             </div>
                         </Col>

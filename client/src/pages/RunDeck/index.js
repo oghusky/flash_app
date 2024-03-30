@@ -48,10 +48,10 @@ export default function RunDeck() {
                 className={`flashcard ${showAnswer ? 'flipped' : ''}`}
                 onClick={handleCardClick}
             >
-                <div className="front">
+                <div className="front p-3">
                     <p><b>Q: {questions[currentCardIndex]?.question}</b></p>
                 </div>
-                <div className="back">
+                <div className="back p-3">
                     <p>A: {questions[currentCardIndex]?.answer}</p>
                 </div>
             </div>
