@@ -18,9 +18,9 @@ export default function SeeDeck() {
     const [decksID, setDecksID] = useState("");
     const [questionID, setQuestionID] = useState("");
     const { setAppMsg, user, jwt } = useContext(AppContext);
+    const [foundFavorite, setFoundFavorite] = useState(false);
     const [deleteDeckModalShow, setDeleteDeckModalShow] = useState(false);
     const [deleteQuestionModalShow, setDeleteQuestionModalShow] = useState(false);
-    const [foundFavorite, setFoundFavorite] = useState(false);
     const getDeck = useCallback(async (deckID, userID) => {
         let res
         if (userID) res = await DeckAPI.getDeckByDeckID(deckID, userID);

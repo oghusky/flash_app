@@ -12,7 +12,9 @@ const AppContext = React.createContext({
     comments: [],
     setComments: () => { },
     appMsg: {},
-    setAppMsg: () => { }
+    setAppMsg: () => { },
+    tests: [],
+    setTests: () => { }
 });
 
 export default AppContext;

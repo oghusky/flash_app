@@ -1,4 +1,4 @@
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 
 export default function Modals({ title, body, show, handleClose, close, save }) {
     return (

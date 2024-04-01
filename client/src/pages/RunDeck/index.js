@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import QuestionAPI from '../../API/questions';
@@ -9,10 +9,9 @@ export default function RunDeck() {
     const params = useParams();
     const { jwt } = useContext(AppContext);
     const [questions, setQuestions] = useState([]);
-    useEffect(() => {
-        getQuestionsByDeckID(params?.deckID);
-    }, [params?.deckID]);
-    const getQuestionsByDeckID = async deckID => {
+    const [showAnswer, setShowAnswer] = useState(false);
+    const [currentCardIndex, setCurrentCardIndex] = useState(0);
+    const getQuestionsByDeckID = useCallback(async deckID => {
         try {
             const res = await QuestionAPI.getQuestionsByDeckID(deckID, jwt);
             if (res.status === 200) {
@@ -21,9 +20,10 @@ export default function RunDeck() {
         } catch (e) {
             return e.message;
         }
-    }
-    const [currentCardIndex, setCurrentCardIndex] = useState(0);
-    const [showAnswer, setShowAnswer] = useState(false);
+    }, [jwt])
+    useEffect(() => {
+        getQuestionsByDeckID(params?.deckID);
+    }, [params?.deckID, getQuestionsByDeckID]);
 
     const handleCardClick = () => {
         setShowAnswer(!showAnswer);

@@ -3,11 +3,12 @@ const mongoose = require("mongoose")
 const DeckSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: "Must name deck"
+        required: "Must name deck",
+        trim: true
     },
     description: {
         type: String,
-        required: "Description required"
+        trim: true
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,

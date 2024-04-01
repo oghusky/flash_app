@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 const FavoriteAPI = {
-    getFavoriteByUserIDAndDeckID: async (deckID, jwt) => {
+    getFavoriteByUserIDAndDeckID: async ({ deckID, testID }, jwt) => {
         try {
-            return axios.get(`/favorites?deckID=${deckID}`, {
+            return axios.get(`/favorites?deckID=${deckID || ""}&testID=${testID || ""}`, {
                 headers: {
                     authorization: jwt
                 }
@@ -12,9 +12,9 @@ const FavoriteAPI = {
             return e.message;
         }
     },
-    postFavoriteByUserIDAndDeckID: (deckID, jwt) => {
+    postFavoriteByUserIDAndDeckID: ({ deckID, testID }, jwt) => {
         try {
-            return axios.post(`/favorites?deckID=${deckID}`, {}, {
+            return axios.post(`/favorites?deckID=${deckID || ""}&testID=${testID || ""}`, {}, {
                 headers: {
                     authorization: jwt
                 }
@@ -23,9 +23,9 @@ const FavoriteAPI = {
             return e.message;
         }
     },
-    deleteFavoriteByUserIDAndDeckID: (deckID, jwt) => {
+    deleteFavoriteByUserIDAndDeckID: ({ deckID, testID }, jwt) => {
         try {
-            return axios.delete(`/favorites?deckID=${deckID}`, {
+            return axios.delete(`/favorites?deckID=${deckID || ""}&testID=${testID || ""}`, {
                 headers: {
                     authorization: jwt
                 }

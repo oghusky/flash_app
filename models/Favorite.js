@@ -9,8 +9,11 @@ const FavoriteSchema = new mongoose.Schema({
     deck: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Deck',
-        required: true,
     },
+    test:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Test'
+    }
 });
 
 module.exports = mongoose.model('Favorite', FavoriteSchema);
