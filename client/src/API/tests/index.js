@@ -25,8 +25,10 @@ const TestAPI = {
             return e.message;
         }
     },
-    getTestById: async () => {
-        try { } catch (e) {
+    getTestById: async (testID, userID) => {
+        try {
+            return axios.get(`/tests/id?testID=${testID}&userID=${userID}`)
+        } catch (e) {
             return e.message;
         }
     },

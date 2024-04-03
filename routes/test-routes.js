@@ -12,7 +12,7 @@ router.route('/')
     .post(isLoggedIn, createTest)
     .get(getAllTests);
 
-router.route('/:id')
+router.route('/id')
     .get(getTestById)
     .put(isLoggedIn, updateTestById)
     .delete(isLoggedIn, deleteTestById);

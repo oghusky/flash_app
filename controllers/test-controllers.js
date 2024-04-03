@@ -48,13 +48,16 @@ exports.getAllTestsByUser = async (req, res) => {
 // Get a single test by ID
 exports.getTestById = async (req, res) => {
     try {
-        const { testID } = req.query;
-        const test = await Test.findById(testID);
+        let favorite;
+        const { testID, userID } = req.query;
+        const test = await Test.findById(testID).populate("user");
+        if (userID) favorite = await Favorite.findOne({ test: testID, user: userID })
         if (!test) {
             return res.status(404).json({ msg: 'Test not found' });
         }
-        res.status(200).json({ msg: "Found test", test });
+        res.status(200).json({ msg: "Found test", test, favorite });
     } catch (e) {
+        console.log(e.message);
         res.status(500).json({ msg: e.message });
     }
 };

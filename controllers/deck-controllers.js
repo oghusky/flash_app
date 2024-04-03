@@ -49,11 +49,11 @@ exports.getDecks = async (req, res) => {
         userID ? favorites = await Favorite.find({ user: userID }) : null;
 
         // Create a set of favorite deck IDs for faster lookup
-        const favoriteDeckIds = new Set(favorites?.map(favorite => favorite.deck.toString()));
+        const favoriteDeckIds = new Set(favorites?.map(favorite => favorite?.deck?.toString()));
         // Modify the deck objects to include information about whether they have been favorited
         const decksWithFavorites = decks?.map(deck => ({
             ...deck.toObject(),
-            isFavorited: favoriteDeckIds.has(deck?._id?.toString()), // Check if the deck ID exists in the set of favorite deck IDs
+            isFavorited: favoriteDeckIds?.has(deck?._id?.toString()), // Check if the deck ID exists in the set of favorite deck IDs
         }));
         const whichDecks = favorites?.length > 0 ? decksWithFavorites : decks
         if (whichDecks.length > 0) return res.status(200).json({ msg: "Found decks", decks: whichDecks, pagination, totalCount });

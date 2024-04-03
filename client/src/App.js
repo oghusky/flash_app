@@ -4,8 +4,9 @@ import { Helmet } from 'react-helmet';
 import './App.css';
 // containers
 import ProtectedRoute from './components/ProtectedRoute';
+import AddDeckQuestion from './pages/AddDeckQuestion';
+import AddTestQuestion from './pages/AddTestQuestion';
 import Navigation from './components/Navigation';
-import AddQuestion from './pages/AddQuestion';
 import UserProfile from './pages/UserProfile';
 import EditProfile from './pages/EditProfile';
 import CreateDeck from './pages/CreateDeck';
@@ -90,7 +91,7 @@ function App() {
             <Route exact path="/tests" element={<Tests />} />
             <Route exact path="/register" element={<Register />} />
             <Route exact path="/deck/id/:deckID" element={<SeeDeck />} />
-            <Route exact path="/test/id/:deckID" element={<SeeTest />} />
+            <Route exact path="/test/id/:testID" element={<SeeTest />} />
             <Route exact path="/user/id/:userID" element={
               <ProtectedRoute>
                 <UserProfile />
@@ -118,7 +119,12 @@ function App() {
             } />
             <Route exact path="/deck/add_question/:deckID" element={
               <ProtectedRoute>
-                <AddQuestion />
+                <AddDeckQuestion />
+              </ProtectedRoute>
+            } />
+            <Route exact path="/test/add_test_question/:testID" element={
+              <ProtectedRoute>
+                <AddTestQuestion />
               </ProtectedRoute>
             } />
           </Routes>

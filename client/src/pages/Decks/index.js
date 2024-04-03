@@ -31,7 +31,7 @@ export default function Decks() {
     }, [user?._id, getDeck])
     const handleFavoriteClick = async deckID => {
         try {
-            const res = await FavoriteAPI.postFavoriteByUserIDAndDeckID({deckID}, jwt);
+            const res = await FavoriteAPI.postFavoriteByUserIDAndDeckID({ deckID }, jwt);
             if (res.status === 201) {
                 const res = await DeckAPI.getAllDecks(user?._id);
                 if (res && res.status === 200) {
@@ -44,7 +44,7 @@ export default function Decks() {
     }
     const handleUnfavoriteClick = async deckID => {
         try {
-            const res = await FavoriteAPI.deleteFavoriteByUserIDAndDeckID({deckID}, jwt);
+            const res = await FavoriteAPI.deleteFavoriteByUserIDAndDeckID({ deckID }, jwt);
             if (res.status === 200) {
                 const res = await DeckAPI.getAllDecks(user?._id);
                 if (res && res.status === 200) setDecks(res.data.decks);
@@ -61,7 +61,7 @@ export default function Decks() {
                     {
                         jwt ? <Link to="/create_deck" className='text-center'>
                             <Buttons btnText={"Create"} btnAlign={"center"} variant={"primary"} className={"my-3"} />
-                        </Link> : <Link to={"#"} className='text-center' ><Buttons btnText={"Login to create new deck"} className={"my-3"} disabled /></Link>
+                        </Link> : <Link to={"#"} className='text-center' ><Buttons btnText={"Login"} className={"my-3"} disabled /></Link>
                     }
                     <div>
                         <SearchInput />
