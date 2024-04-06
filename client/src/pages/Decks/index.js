@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect } from 'react';
 // components
 import { Helmet } from 'react-helmet';
-import { Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Buttons from '../../components/Buttons';
 import { Container, Row, Col } from 'react-bootstrap';
 import SearchInput from '../../components/SearchInput';
@@ -13,7 +13,7 @@ import AppContext from '../../store/AppContext';
 import favorited from '../../SVG/favheart.svg'
 import unfavorited from '../../SVG/openheart.svg'
 export default function Decks() {
-    const { decks, setDecks, jwt, user, report, setReport } = useContext(AppContext);
+    const { decks, setDecks, jwt, user } = useContext(AppContext);
     const getDeck = useCallback(async userID => {
         try {
             if (userID) {

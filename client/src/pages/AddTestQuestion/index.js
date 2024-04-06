@@ -2,12 +2,9 @@ import { useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 // components
 import Form from "react-bootstrap/Form";
-import InputGroup from 'react-bootstrap/InputGroup';
 import Container from 'react-bootstrap/Container';
 import TextInputs from "../../components/TextInputs";
-import PrependInput from '../../components/PrependInput';
 import Buttons from "../../components/Buttons";
-import Modals from "../../components/Modals";
 import { Helmet } from 'react-helmet';
 import QuestionAPI from '../../API/questions';
 import AppContext from '../../store/AppContext';
@@ -102,7 +99,7 @@ export default function AddTestQuestion() {
                 allValidQuestions = true;
             })
             if (allValidQuestions) {
-                const res = await QuestionAPI.createNewTestQuestions(questions, params?.testID, jwt);
+                await QuestionAPI.createNewTestQuestions(questions, params?.testID, jwt);
                 navigate(`/test/id/${params?.testID}`);
             }
         } catch (e) {
@@ -111,9 +108,9 @@ export default function AddTestQuestion() {
     }
     return (
         <>
+            <Helmet><title>Flash_App | Add Test Question</title></Helmet>
             <Container>
                 <h2 className='text-center'>Add Test Question(s)</h2>
-
                 <Form onSubmit={handleTestSubmit}>
                     {questionsArray}
                     <Buttons
