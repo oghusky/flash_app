@@ -10,6 +10,7 @@ import deleteSVG from "../../SVG/delete.svg";
 import favorited from '../../SVG/favheart.svg'
 import unfavorited from '../../SVG/openheart.svg'
 import FavoriteAPI from "../../API/favorites";
+import QuestionAPI from "../../API/questions";
 export default function SeeTest() {
     const params = useParams();
     const navigate = useNavigate();
@@ -43,18 +44,18 @@ export default function SeeTest() {
         setTestsID(did);
         setDeleteTestModalShow(true);
     }
-    // const handleSubmitDeleteQuestionClick = async () => {
-    //     try {
-    //         const res = await QuestionAPI.deleteQuestion(questionID, jwt);
-    //         if (res.status === 200) {
-    //             setDeleteQuestionModalShow(false);
-    //             setTest(res.data.test);
-    //         }
-    //     } catch (e) {
-    //         return e.message
-    //     }
-    // }
-    const handleSubmitDeleteTestClick = async () => {
+    const handleSubmitDeleteQuestionClick = async () => {
+        try {
+            const res = await QuestionAPI.deleteTestQuestionByQuestionID(questionID, jwt);
+            if (res.status === 200) {
+                setDeleteQuestionModalShow(false);
+                setTest(res.data.test);
+            }
+        } catch (e) {
+            return e.message
+        }
+    }
+    const handleSubmitDeleteTestClick = useCallback(async () => {
         try {
             const res = await TestAPI.deleteTestByTestID(testsID, jwt);
             if (res.status === 200) {
@@ -63,10 +64,10 @@ export default function SeeTest() {
         } catch (e) {
             return e.message;
         }
-    }
+    }, [testsID, jwt, navigate]);
     const handleFavoriteClick = useCallback(async testID => {
         try {
-            const res = await FavoriteAPI.postFavoriteByUserIDAndDeckID(testID, jwt);
+            const res = await FavoriteAPI.postFavoriteByUserIDAndDeckID({ testID }, jwt);
             if (res.status === 201) {
                 const res = await TestAPI.getAllTests(user?._id);
                 setFoundFavorite(true);
@@ -81,7 +82,7 @@ export default function SeeTest() {
     }, [jwt, user?._id])
     const handleUnfavoriteClick = useCallback(async testID => {
         try {
-            const res = await FavoriteAPI.deleteFavoriteByUserIDAndDeckID(testID, jwt);
+            const res = await FavoriteAPI.deleteFavoriteByUserIDAndDeckID({ testID }, jwt);
             setFoundFavorite(false);
             if (res.status === 200) {
                 let res = await TestAPI.getTestById(testID, user?._id);
@@ -139,7 +140,7 @@ export default function SeeTest() {
                                 <div key={q._id} className="my-3 d-flex">
                                     <div className="flex-grow-1">
                                         <p className="py-0 my-0"><b>Q: {q?.question}</b></p>
-                                        <p className="py-0 my-0"><b>A:</b> {q?.answer}</p>
+                                        <p className="py-0 my-0"><b>A:</b> {q?.answer === true ? "True" : q?.answer === false ? "False" : q?.answer}</p>
                                     </div>
                                     {q.user === user._id ?
                                         <>
@@ -158,7 +159,7 @@ export default function SeeTest() {
                 title="Are you sure you want to delete this question?"
                 show={deleteQuestionModalShow}
                 close={<Buttons btnText={"Cancel"} onClick={handleClose} variant={"outline-danger"} />}
-                // save={<Buttons btnText={"Delete"} variant={"danger"} onClick={handleSubmitDeleteQuestionClick} />}
+                save={<Buttons btnText={"Delete"} variant={"danger"} onClick={handleSubmitDeleteQuestionClick} />}
                 closeVariant={"none"}
                 saveVariant={"none"}
             />

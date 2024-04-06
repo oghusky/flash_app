@@ -43,13 +43,10 @@ const TestAPI = {
             return e.message;
         }
     },
-    deleteTestById: async (testID, jwt) => {// need token
+    deleteTestByTestID: async (testID, jwt) => {// need token
         try {
-            axios.delete(`/tests?testID=${testID}`, {
-                headers: {
-                    authorization: jwt
-                }
-            })
+            return axios.delete(`/tests/id?testID=${testID}`,
+                { headers: { authorization: jwt } });
         } catch (e) {
             return e.message;
         }

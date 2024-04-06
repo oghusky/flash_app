@@ -67,7 +67,7 @@ export default function SeeDeck() {
     }
     const handleFavoriteClick = useCallback(async deckID => {
         try {
-            const res = await FavoriteAPI.postFavoriteByUserIDAndDeckID(deckID, jwt);
+            const res = await FavoriteAPI.postFavoriteByUserIDAndDeckID({ deckID }, jwt);
             if (res.status === 201) {
                 const res = await DeckAPI.getAllDecks(user?._id);
                 setFoundFavorite(true);
@@ -82,7 +82,7 @@ export default function SeeDeck() {
     }, [jwt, user?._id])
     const handleUnfavoriteClick = useCallback(async deckID => {
         try {
-            const res = await FavoriteAPI.deleteFavoriteByUserIDAndDeckID(deckID, jwt);
+            const res = await FavoriteAPI.deleteFavoriteByUserIDAndDeckID({ deckID }, jwt);
             setFoundFavorite(false);
             if (res.status === 200) {
                 let res = await DeckAPI.getDeckByDeckID(deckID, user?._id);

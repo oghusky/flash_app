@@ -7,7 +7,7 @@ import './SearchInput.css';
 const SearchInput = () => {
     const href = useHref();
     const [searchTerm, setSearchTerm] = useState('');
-    const { setDecks } = useContext(AppContext);
+    const { setDecks, setTests } = useContext(AppContext);
     const handleChange = (event) => {
         setSearchTerm(event.target.value);
     };
@@ -16,8 +16,14 @@ const SearchInput = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const res = await SearchAPI.getDeckBySearch(searchTerm);
+            if(isDecksOrTests === "decks"){
+                const res = await SearchAPI.getDeckBySearch(searchTerm);
             if (res.status === 200) setDecks(res.data.decks);
+        }
+        if(isDecksOrTests === "tests"){
+            const res = await SearchAPI.getTestsBySearch(searchTerm);
+            if(res.status === 200) setTests(res.data.tests);
+        }
         } catch (e) {
             return e.message;
         }
@@ -30,6 +36,7 @@ const SearchInput = () => {
                 onChange={handleChange}
                 placeholder={`Search ${isDecksOrTests}...`}
                 className="search-input"
+                style={{ maxWidth: "190px" }}
             />
             <button type="submit" className="search-button">
                 Search

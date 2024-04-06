@@ -1,5 +1,6 @@
 import { useContext, useEffect, useCallback } from 'react';
 import { Link } from "react-router-dom";
+import { Helmet } from 'react-helmet';
 import { Container, Row, Col } from 'react-bootstrap';
 import Buttons from "../../components/Buttons";
 import AppContext from '../../store/AppContext';
@@ -50,18 +51,19 @@ export default function Tests() {
         }
     }
     return (
-        <Container>
-            <div className='d-flex justify-content-around align-items-center'>
-                {
-                    jwt ? <Link to="/create_test" className='text-center'>
-                        <Buttons btnText={"Create"} btnAlign={"center"} variant={"dark"} className={"my-3"} />
-                    </Link> : <Link to={"#"} className='text-center' ><Buttons btnText={"Login"} className={"my-3"} disabled /></Link>
-                }
-                <div>
-                    <SearchInput />
+        <>
+            <Helmet><title>Flash_App | Tests</title></Helmet>
+            <Container fluid>
+                <div className='d-flex justify-content-around align-items-center'>
+                    {
+                        jwt ? <Link to="/create_test" className='text-center'>
+                            <Buttons btnText={"Create"} btnAlign={"center"} variant={"dark"} className={"my-3"} />
+                        </Link> : <Link to={"#"} className='text-center' ><Buttons btnText={"Login"} className={"my-3"} disabled /></Link>
+                    }
+                    <div>
+                        <SearchInput />
+                    </div>
                 </div>
-            </div>
-            <Row>
                 <Row>
                     {tests?.map(test => (
                         <Col key={test?._id} lg={3} md={4} sm={6} xs={12} className={"my-2"}>
@@ -98,8 +100,7 @@ export default function Tests() {
                         </Col>
                     ))}
                 </Row>
-
-            </Row>
-        </Container>
+            </Container>
+        </>
     );
 }

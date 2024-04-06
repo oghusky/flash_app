@@ -91,6 +91,8 @@ exports.findUserById = async (req, res) => {
     }
 }
 
+
+
 exports.updateUser = async (req, res) => {
     const { userId } = req.params;
     try {
@@ -98,26 +100,42 @@ exports.updateUser = async (req, res) => {
             email: req.body.email,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            userName: req.body.userName,
-            password: req.body.password
+            userName: req.body.userName
+        };
+
+        // Check if the request includes a new password
+        if (req.body.password) {
+            // Hash the new password
+            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+            // Add the hashed password to the update data
+            data.password = hashedPassword;
         }
+
+        // Update the user document in the database
         const user = await User.findByIdAndUpdate(userId, data, { new: true });
+
         if (user) {
+            // Construct the updated user object to send in the response
             const updatedUser = {
                 _id: user._id,
                 email: user.email,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 userName: user.userName,
-                isVerified: user.isVerified
-            }
+                isVerified: user.isVerified,
+            };
+
+            // Sign a new token for the updated user
             const token = await signToken(user);
+
             return res.status(200).json({ msg: "USER UPDATED", updatedUser, token });
         }
     } catch (err) {
         console.log(err);
+        return res.status(500).json({ msg: "Internal Server Error" });
     }
-}
+};
+
 
 exports.deleteUser = async (req, res) => {
     const { userId } = req.params;

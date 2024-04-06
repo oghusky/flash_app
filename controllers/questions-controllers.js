@@ -1,5 +1,8 @@
 const Question = require("../models/Question"),
-    Deck = require("../models/Deck");
+    Deck = require("../models/Deck"),
+    Test = require("../models/Test"),
+    TestQuestion = require("../models/TestQuestion"),
+    { MultipleChoice, TrueFalse } = require("../models/questionTypes");
 
 exports.createQuestion = async (req, res) => {
     try {
@@ -96,6 +99,82 @@ exports.deleteQuestionByQuestionID = async (req, res) => {
         if (!question) return res.status(404).json({ msg: "Unable to find question" });
         await question.deleteOne();
         return res.status(200).json({ msg: "Question deleted", deck });
+    } catch (e) {
+        return res.status(500).json({ msg: e.message });
+    }
+}
+
+exports.createTestQuestions = async (req, res) => {
+    try {
+        const { testID } = req.query;
+        const questions = req.body;
+        if (!req.user._id) return res.status(403).json({ msg: "You aren't authorized to do that" });
+        const test = await Test.findOne({ _id: testID });
+        if (!test) return res.status(404).json({ msg: "Unable to find test" });
+        if (questions.length < 1) return res.status(500).json({ msg: "Test must have at least one question" });
+        for (let i = 0; i < questions.length; i++) {
+            let question = questions[i];
+            if (!question.answer) {
+                return res.status(500).json({ msg: "Question must have an answer" });
+            }
+            if (!question.question) {
+                return res.status(500).json({ msg: "Question must have a question" });
+            }
+            if (question.options.length < 2) {
+                return res.status(500).json({ msg: "Question must have at least 2 options" });
+            }
+        }
+        const savedQuestions = [];
+        for (let i = 0; i < questions.length; i++) {
+            let q = questions[i];
+            let newQuestion;
+            newQuestion = await MultipleChoice.create({
+                question: q.question,
+                answer: q.answer,
+                options: [...q.options],
+                test: testID,
+                user: req.user._id
+            })
+            savedQuestions.push(newQuestion);
+        }
+        for (const id of savedQuestions) {
+            test.questions.push(id);
+        }
+        await test.save()
+        return res.status(201).json({ msg: "Questions saved", savedQuestions, test });
+    } catch (e) {
+        return res.status(500).json({ msg: e.message });
+    }
+}
+
+exports.getQuestionsByTestID = async (req, res) => {
+    try {
+        const { testID } = req.query;
+        const questions = await TestQuestion.find({ test: testID });
+        return res.status(200).json({ msg: "Found questions", questions })
+    } catch (e) {
+        return e.message;
+    }
+}
+
+exports.deleteTestQuestionByQuestionID = async (req, res) => {
+    try {
+        const { questionID } = req.query;
+        const testQuestion = await TestQuestion.findByIdAndDelete(questionID);
+        const test = await Test.findOneAndUpdate({ _id: testQuestion.test }, { "$pull": { questions: questionID } }, { new: true }).populate("user").populate("questions");
+        if (!testQuestion) return res.status(400).json({ msg: "Unable to find test question" });
+        return res.status(200).json({ msg: "Test question deleted", test });
+    } catch (e) {
+        return res.status(500).json({ msg: e.message });
+    }
+}
+
+exports.checkTestAnswerById = async (req, res) => {
+    try {
+        const { questionID } = req.query;
+        const answer = await (await TestQuestion.findById(questionID)).answer;
+        if (!answer) return res.status(404).json({ msg: "Unable to find question" });
+        return res.status(200).json({ msg: "Found answer", answer });
     } catch (e) {
         return res.status(500).json({ msg: e.message });
     }

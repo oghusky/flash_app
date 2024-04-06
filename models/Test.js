@@ -17,7 +17,7 @@ const TestSchema = new mongoose.Schema({
     },
     questions: [{
         type: mongoose.Schema.Types.ObjectId,
-        refPath: 'questionType',
+        ref: "TestQuestion"
     }],
     questionType: {
         type: String,

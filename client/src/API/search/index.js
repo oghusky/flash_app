@@ -7,6 +7,14 @@ const SearchAPI = {
         } catch (e) {
             return e.message;
         }
+    },
+    getTestsBySearch: async searchTerm => {
+        console.log({ searchTerm })
+        try {
+            return await axios.get(`/search?testsSearchTerm=${searchTerm}`)
+        } catch (e) {
+            return e.message;
+        }
     }
 }
 

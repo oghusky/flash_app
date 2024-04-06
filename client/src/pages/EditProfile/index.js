@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import { Form } from "react-bootstrap";
 import TextInputs from "../../components/TextInputs";
 import Buttons from '../../components/Buttons';
@@ -73,6 +74,7 @@ export default function EditProfile() {
     }
     return (
         <>
+            <Helmet><title>Flash_App | Edit Profile</title></Helmet>
             <Form onSubmit={handleSubmit}>
                 <TextInputs
                     onChange={handleUserInputChange}

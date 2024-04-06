@@ -12,11 +12,13 @@ import EditProfile from './pages/EditProfile';
 import CreateDeck from './pages/CreateDeck';
 import CreateTest from './pages/CreateTest';
 import MsgDiv from './components/MsgDiv';
+import Footer from './components/Footer';
 import Register from './pages/Register';
 import Welcome from './pages/Welcome';
 import SeeDeck from './pages/SeeDeck';
 import SeeTest from './pages/SeeTest';
 import RunDeck from './pages/RunDeck';
+import RunTest from './pages/RunTest';
 import Login from './pages/Login';
 import Decks from './pages/Decks';
 import Tests from './pages/Tests';
@@ -112,6 +114,11 @@ function App() {
                 <RunDeck />
               </ProtectedRoute>
             } />
+            <Route exact path="/test/run/:testID" element={
+              <ProtectedRoute>
+                <RunTest />
+              </ProtectedRoute>
+            } />
             <Route exact path="/user/edit/:userID" element={
               <ProtectedRoute>
                 <EditProfile />
@@ -129,6 +136,7 @@ function App() {
             } />
           </Routes>
         </AppContext.Provider>
+        <Footer />
       </Router>
     </div>
   );

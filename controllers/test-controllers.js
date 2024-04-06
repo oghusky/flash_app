@@ -1,4 +1,5 @@
 const Test = require('../models/Test'),
+    { MultipleChoice, TrueFalse } = require("../models/questionTypes"),
     Favorite = require("../models/Favorite");
 
 // Create a new test
@@ -6,16 +7,16 @@ exports.createTest = async (req, res) => {
     try {
         const { name } = req.body;
         const test = await Test.create({ name, user: req.user._id });
-        res.status(201).json({ msg: "Test created", test });
+        return res.status(201).json({ msg: "Test created", test });
     } catch (e) {
-        res.status(500).json({ msg: e.message });
+        return res.status(500).json({ msg: e.message });
     }
 };
 
 exports.getAllTests = async (req, res) => {
     try {
         const { userID } = req?.query;
-        const tests = await Test.find().populate("user");
+        const tests = await Test.find().populate("user").populate("questions");
         // Fetch all favorites for the authenticated user
         let favorites
         userID ? favorites = await Favorite.find({ user: userID }) : null;
@@ -38,10 +39,10 @@ exports.getAllTests = async (req, res) => {
 exports.getAllTestsByUser = async (req, res) => {
     try {
         const { userID } = req.query
-        const tests = await Test.find({ user: userID }).populate("user");
-        res.status(200).json({ msg: "Found tests by user", tests });
+        const tests = await Test.find({ user: userID }).populate("user").populate("questions");
+        return res.status(200).json({ msg: "Found tests by user", tests });
     } catch (err) {
-        res.status(500).json({ msg: e.message });
+        return res.status(500).json({ msg: e.message });
     }
 };
 
@@ -50,15 +51,17 @@ exports.getTestById = async (req, res) => {
     try {
         let favorite;
         const { testID, userID } = req.query;
-        const test = await Test.findById(testID).populate("user");
+        const test = await Test.findById(testID).populate("user").populate({
+            path: "questions",
+            populate: { path: "questionType" }
+        });
         if (userID) favorite = await Favorite.findOne({ test: testID, user: userID })
         if (!test) {
             return res.status(404).json({ msg: 'Test not found' });
         }
-        res.status(200).json({ msg: "Found test", test, favorite });
+        return res.status(200).json({ msg: "Found test", test, favorite });
     } catch (e) {
-        console.log(e.message);
-        res.status(500).json({ msg: e.message });
+        return res.status(500).json({ msg: e.message });
     }
 };
 
@@ -73,20 +76,23 @@ exports.updateTestById = async (req, res) => {
         res.json(test);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Server error' });
+        return res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Delete a test by ID
 exports.deleteTestById = async (req, res) => {
     try {
-        const test = await Test.findByIdAndDelete(req.params.id);
+        const { testID } = req.query;
+        await MultipleChoice.find({ user: req.user._id, test: testID }).deleteMany();
+        await TrueFalse.find({ user: req.user._id, test: testID }).deleteMany();
+        await Favorite.find({ user: req.user._id, test: testID }).deleteMany();
+        const test = await Test.findOneAndDelete({ _id: testID, user: req.user._id });
         if (!test) {
             return res.status(404).json({ message: 'Test not found' });
         }
-        res.json({ message: 'Test deleted' });
+        return res.status(200).json({ message: 'Test deleted' });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
+        return res.status(500).json({ message: 'Server error' });
     }
 };

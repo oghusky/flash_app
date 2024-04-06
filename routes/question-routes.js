@@ -6,13 +6,26 @@ const router = require("express").Router(),
         getQuestionByQuestionID,
         updateQuestionByQuestionID,
         deleteQuestionByQuestionID,
-        getQuestionsByUserID
+        getQuestionsByUserID,
+        createTestQuestions,
+        getQuestionsByTestID,
+        deleteTestQuestionByQuestionID,
+        checkTestAnswerById
     } = require("../controllers/questions-controllers");
 
 router
     .route("/")
     .get(isLoggedIn, getQuestionsByDeckID)
     .post(isLoggedIn, createQuestion);
+
+router
+    .route("/tests")
+    .post(isLoggedIn, createTestQuestions);
+
+router
+    .route("/tests/id")
+    .delete(isLoggedIn, deleteTestQuestionByQuestionID)
+    .get(getQuestionsByTestID);
 
 router
     .route("/id")
@@ -22,6 +35,10 @@ router
 
 router
     .route("/userid")
-    .get(isLoggedIn, getQuestionsByUserID)
+    .get(isLoggedIn, getQuestionsByUserID);
+
+router
+    .route("/tests/run")
+    .get(isLoggedIn, checkTestAnswerById);
 
 module.exports = router;

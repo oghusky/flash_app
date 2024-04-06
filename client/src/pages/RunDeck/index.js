@@ -1,9 +1,10 @@
 import { useEffect, useState, useContext, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
 import QuestionAPI from '../../API/questions';
 import AppContext from '../../store/AppContext';
-import './FlashCard.css'; // Import CSS for styling
+import './FlashCard.css';
 
 export default function RunDeck() {
     const params = useParams();
@@ -43,27 +44,30 @@ export default function RunDeck() {
         }
     };
     return (
-        <Container className='d-flex align-items-center justify-content-center flex-column' id="flashcard-container">
-            <div
-                className={`flashcard ${showAnswer ? 'flipped' : ''}`}
-                onClick={handleCardClick}
-            >
-                <div className="front p-3">
-                    <p><b>Q: {questions[currentCardIndex]?.question}</b></p>
+        <>
+            <Helmet><title>Flash_App | Run a deck</title></Helmet>
+            <Container className='d-flex align-items-center justify-content-center flex-column' id="flashcard-container">
+                <div
+                    className={`flashcard ${showAnswer ? 'flipped' : ''}`}
+                    onClick={handleCardClick}
+                >
+                    <div className="front p-3">
+                        <p><b>Q: {questions[currentCardIndex]?.question}</b></p>
+                    </div>
+                    <div className="back p-3">
+                        <p>A: {questions[currentCardIndex]?.answer}</p>
+                    </div>
                 </div>
-                <div className="back p-3">
-                    <p>A: {questions[currentCardIndex]?.answer}</p>
+                <div className="navigation-arrows">
+                    <button className="leftArrow" onClick={handlePrevCard} disabled={currentCardIndex === 0}>
+                        &#10094; Prev
+                    </button>
+                    <button className="rightArrow" onClick={handleNextCard} disabled={currentCardIndex === questions?.length - 1}>
+                        Next &#10095;
+                    </button>
                 </div>
-            </div>
-            <div className="navigation-arrows">
-                <button className="leftArrow" onClick={handlePrevCard} disabled={currentCardIndex === 0}>
-                    &#10094; Prev
-                </button>
-                <button className="rightArrow" onClick={handleNextCard} disabled={currentCardIndex === questions?.length - 1}>
-                    Next &#10095;
-                </button>
-            </div>
-        </Container>
+            </Container>
+        </>
     );
 }
 
