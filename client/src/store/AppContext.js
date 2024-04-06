@@ -14,7 +14,9 @@ const AppContext = React.createContext({
     appMsg: {},
     setAppMsg: () => { },
     tests: [],
-    setTests: () => { }
+    setTests: () => { },
+    report: {},
+    setReport: () => { },
 });
 
 export default AppContext;

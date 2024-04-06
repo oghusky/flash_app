@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         unique: true,
         required: "Username required",
-        trim:true
+        trim: true
     },
     password: {
         type: String,
@@ -47,6 +47,9 @@ const UserSchema = new mongoose.Schema({
         type: String,
         enum: ["normie", "admin", "holy"],
         default: "normie"
+    },
+    ipAddress: {
+        type: String
     }
 }, { timestamps: true });
 

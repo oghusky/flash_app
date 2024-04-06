@@ -11,15 +11,17 @@ import deleteSVG from "../../SVG/delete.svg";
 import favorited from '../../SVG/favheart.svg'
 import unfavorited from '../../SVG/openheart.svg'
 import FavoriteAPI from "../../API/favorites";
+import reportFlag from '../../SVG/reportFlag.svg';
+
 export default function SeeDeck() {
     const params = useParams();
     const navigate = useNavigate();
     const [deck, setDeck] = useState({});
     const [decksID, setDecksID] = useState("");
     const [questionID, setQuestionID] = useState("");
-    const { setAppMsg, user, jwt } = useContext(AppContext);
     const [foundFavorite, setFoundFavorite] = useState(false);
     const [deleteDeckModalShow, setDeleteDeckModalShow] = useState(false);
+    const { setAppMsg, user, jwt, report, setReport } = useContext(AppContext);
     const [deleteQuestionModalShow, setDeleteQuestionModalShow] = useState(false);
     const getDeck = useCallback(async (deckID, userID) => {
         let res
@@ -86,12 +88,16 @@ export default function SeeDeck() {
             setFoundFavorite(false);
             if (res.status === 200) {
                 let res = await DeckAPI.getDeckByDeckID(deckID, user?._id);
-                setDeck(res.data.deck);;
+                setDeck(res.data.deck);
             }
         } catch (e) {
             return e.message;
         }
     }, [jwt, user?._id])
+    const handleReportClick = () => {
+        setReport({ ...report, reportedItem: params?.deckID, reporter: user?._id });
+        navigate("/report")
+    }
     return (
         <>
             <Helmet>
@@ -106,7 +112,11 @@ export default function SeeDeck() {
                                 {
                                     jwt && foundFavorite ? <img src={favorited} alt={"favorites-heart"} onClick={() => handleUnfavoriteClick(deck?._id)} style={{ cursor: "pointer" }} />
                                         : jwt && !foundFavorite ? <img src={unfavorited} alt={"open-heart"} onClick={() => handleFavoriteClick(deck?._id)} style={{ cursor: "pointer" }} />
-                                            : null}
+                                            : null
+                                }
+                                <div className="d-flex justify-content-end my-3" onClick={handleReportClick}>
+                                    <img src={reportFlag} alt={"Report Flag"} />
+                                </div>
                             </div>
                         </div>
                     </Card.Header>

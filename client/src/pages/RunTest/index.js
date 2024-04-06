@@ -1,13 +1,15 @@
 import { useEffect, useState, useContext, useCallback } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Container } from 'react-bootstrap';
 import Buttons from '../../components/Buttons';
 import QuestionAPI from '../../API/questions';
 import AppContext from '../../store/AppContext';
+
 export default function RunTest() {
     const params = useParams();
-    const { jwt, setAppMsg } = useContext(AppContext);
+    const navigate = useNavigate();
+    const { jwt, setAppMsg, setReport, report, user } = useContext(AppContext);
     const [questions, setQuestions] = useState([]);
     const [questionsLength, setQuestionsLength] = useState(0);
     const [correct, setCorrect] = useState(0);

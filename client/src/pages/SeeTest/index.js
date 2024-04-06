@@ -11,13 +11,15 @@ import favorited from '../../SVG/favheart.svg'
 import unfavorited from '../../SVG/openheart.svg'
 import FavoriteAPI from "../../API/favorites";
 import QuestionAPI from "../../API/questions";
+import reportFlag from '../../SVG/reportFlag.svg';
+
 export default function SeeTest() {
     const params = useParams();
     const navigate = useNavigate();
     const [test, setTest] = useState({});
     const [testsID, setTestsID] = useState("");
     const [questionID, setQuestionID] = useState("");
-    const { setAppMsg, user, jwt } = useContext(AppContext);
+    const { setAppMsg, user, jwt, report, setReport } = useContext(AppContext);
     const [foundFavorite, setFoundFavorite] = useState(false);
     const [deleteTestModalShow, setDeleteTestModalShow] = useState(false);
     const [deleteQuestionModalShow, setDeleteQuestionModalShow] = useState(false);
@@ -92,6 +94,10 @@ export default function SeeTest() {
             return e.message;
         }
     }, [jwt, user?._id]);
+    const handleReportClick = () => {
+        setReport({ ...report, reportedItem: params?.testID, reporter: user?._id });
+        navigate("/report")
+    }
     return (
         <>
             <Helmet>
@@ -106,7 +112,11 @@ export default function SeeTest() {
                                 {
                                     jwt && foundFavorite ? <img src={favorited} alt={"favorites-heart"} onClick={() => handleUnfavoriteClick(test?._id)} style={{ cursor: "pointer" }} />
                                         : jwt && !foundFavorite ? <img src={unfavorited} alt={"open-heart"} onClick={() => handleFavoriteClick(test?._id)} style={{ cursor: "pointer" }} />
-                                            : null}
+                                            : null
+                                }
+                                <div className="d-flex justify-content-end my-3" onClick={handleReportClick}>
+                                    <img src={reportFlag} alt={"Report Flag"} />
+                                </div>
                             </div>
                         </div>
                     </Card.Header>

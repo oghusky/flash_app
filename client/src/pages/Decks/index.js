@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect } from 'react';
 // components
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import Buttons from '../../components/Buttons';
 import { Container, Row, Col } from 'react-bootstrap';
 import SearchInput from '../../components/SearchInput';
@@ -13,7 +13,7 @@ import AppContext from '../../store/AppContext';
 import favorited from '../../SVG/favheart.svg'
 import unfavorited from '../../SVG/openheart.svg'
 export default function Decks() {
-    const { decks, setDecks, jwt, user } = useContext(AppContext);
+    const { decks, setDecks, jwt, user, report, setReport } = useContext(AppContext);
     const getDeck = useCallback(async userID => {
         try {
             if (userID) {
@@ -96,9 +96,11 @@ export default function Decks() {
                                     </Link>
                                     <Buttons size={"sm"} btnText={`${deck?.questions?.length} ${deck?.questions.length === 1 ? "Item" : "Items"}`} variant={"dark"} disabled />
                                 </div>
-                                <Link to={`/user/id/${deck?.user._id}`} style={{ textDecoration: "none", color: "#000" }}>
-                                    <p className={"mt-3 mb-0 text"}>{deck?.user?.userName ? `${deck?.user?.userName}` : `${deck?.user?.firstName} ${deck?.user?.lastName}`}</p>
-                                </Link>
+                                <div className='d-flex justify-content-between mt-3'>
+                                    <Link to={`/user/id/${deck?.user._id}`} style={{ textDecoration: "none", color: "#000" }}>
+                                        <p className={"mt-3 mb-0 text"}>{deck?.user?.userName ? `${deck?.user?.userName}` : `${deck?.user?.firstName} ${deck?.user?.lastName}`}</p>
+                                    </Link>
+                                </div>
                             </div>
                         </Col>
                     ))}

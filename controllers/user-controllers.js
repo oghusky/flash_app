@@ -24,7 +24,7 @@ exports.createUser = async (req, res) => {
         if (user) {
             return res.status(500).json({ msg: "USER WITH THAT INFO EXISTS" });
         }
-        const newUser = await User.create({ email, password: pwdToSave, firstName, lastName, type, isAdult, userName });
+        const newUser = await User.create({ email, password: pwdToSave, firstName, lastName, type, isAdult, userName, ipAddress: req.ip });
         const token = await signToken(newUser);
         return res.status(201).json({
             token,

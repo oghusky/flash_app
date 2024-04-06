@@ -13,6 +13,7 @@ import CreateDeck from './pages/CreateDeck';
 import CreateTest from './pages/CreateTest';
 import MsgDiv from './components/MsgDiv';
 import Footer from './components/Footer';
+import Report from './pages/Report';
 import Register from './pages/Register';
 import Welcome from './pages/Welcome';
 import SeeDeck from './pages/SeeDeck';
@@ -29,6 +30,7 @@ function App() {
   const [questions, setQuestions] = useState([]);
   const [comments, setComments] = useState([]);
   const [appMsg, setAppMsg] = useState({});
+  const [report, setReport] = useState({});
   const [decks, setDecks] = useState([]);
   const [tests, setTests] = useState([]);
   const [user, setUser] = useState({});
@@ -38,6 +40,7 @@ function App() {
     questions, setQuestions,
     comments, setComments,
     appMsg, setAppMsg,
+    report, setReport,
     decks, setDecks,
     tests, setTests,
     user, setUser,
@@ -132,6 +135,11 @@ function App() {
             <Route exact path="/test/add_test_question/:testID" element={
               <ProtectedRoute>
                 <AddTestQuestion />
+              </ProtectedRoute>
+            } />
+            <Route exact path="/report" element={
+              <ProtectedRoute>
+                <Report />
               </ProtectedRoute>
             } />
           </Routes>
