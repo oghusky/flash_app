@@ -58,8 +58,11 @@ export default function Navigation() {
                             </>
                         ) : (
                             <>
+                                <li className='nav-item'>
+                                    <Link to="/register" className='nav-link'> Register</Link>
+                                </li>
                                 <li className="nav-item">
-                                    <Link to="/" className="nav-link"><Buttons btnText={"LOGIN/REGISTER"} btnAlign={"right"} variant={"outline-primary"} /></Link>
+                                    <Link to="/login" className="nav-link"><Buttons className={"btn-sm"} btnText={"LOGIN"} btnAlign={"right"} variant={"outline-primary"} /></Link>
                                 </li>
                             </>
                         )}

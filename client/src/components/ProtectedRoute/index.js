@@ -5,7 +5,7 @@ export default function ProtectedRoute({ children }) {
     const { jwt, user } = useContext(AppContext);
     return (
         <div>
-            {jwt || user ? children : <Navigate to={"/login"} replace />}
+            {jwt && user ? children : <Navigate to={"/login"} replace />}
         </div>
     )
 }

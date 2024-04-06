@@ -11,12 +11,14 @@ export default function Report() {
     const handleSubmitReport = async e => {
         e.preventDefault();
         try {
-            const res = await ReportAPI.createReport(report, jwt);
-            setAppMsg({ show: true, variant: "success", text: "Report created" })
-            if (res.status === 201) {
-                setReport({});
-                navigate("/");
-            }
+            if (report?.reason) {
+                const res = await ReportAPI.createReport(report, jwt);
+                setAppMsg({ show: true, variant: "success", text: "Report created" })
+                if (res.status === 201) {
+                    setReport({});
+                    navigate("/");
+                }
+            } else setAppMsg({ show: true, variant: "danger", text: "You must enter a reason" })
         } catch (e) {
             return e.message
         }
