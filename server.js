@@ -3,6 +3,7 @@ const morgan = require('morgan'),
     express = require('express'),
     app = express(),
     connectDB = require('./config/db'),
+    ErrorLog = require('./models/ErrorLog'),
     rateLimit = require('express-rate-limit'),
     userRoutes = require("./routes/user-routes"),
     deckRoutes = require("./routes/deck-routes"),
@@ -11,7 +12,6 @@ const morgan = require('morgan'),
     searchRoutes = require('./routes/search-routes'),
     questionRoutes = require("./routes/question-routes"),
     favoriteRoutes = require("./routes/favorite-routes");
-
 PORT = process.env.PORT || 3001;
 
 // connect to DB
@@ -28,6 +28,19 @@ const limiter = rateLimit({
 
 // Apply rate limiter to all requests
 app.use(limiter);
+
+// Error handling middleware
+app.use((e, req, res, next) => {
+    // Log the error to the database
+    const errorLog = new ErrorLog({
+        message: e.message,
+        stackTrace: e.stack,
+    });
+    errorLog.save();
+
+    // Respond to the client with an error message
+    res.status(500).json({ error: 'Internal Server Error' });
+});
 
 // Set up logging middleware
 app.use(morgan('dev'));
