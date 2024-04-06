@@ -6,6 +6,7 @@ import './App.css';
 import ProtectedRoute from './components/ProtectedRoute';
 import AddDeckQuestion from './pages/AddDeckQuestion';
 import AddTestQuestion from './pages/AddTestQuestion';
+import TermsOfService from './pages/TermsOfService';
 import Navigation from './components/Navigation';
 import UserProfile from './pages/UserProfile';
 import EditProfile from './pages/EditProfile';
@@ -89,60 +90,63 @@ function App() {
         <AppContext.Provider value={state}>
           <Navigation />
           <MsgDiv appMsg={appMsg} />
-          <Routes>
-            <Route exact path="/" element={<Welcome />} />
-            <Route exact path="/login" element={<Login />} />
-            <Route exact path="/decks" element={<Decks />} />
-            <Route exact path="/tests" element={<Tests />} />
-            <Route exact path="/register" element={<Register />} />
-            <Route exact path="/deck/id/:deckID" element={<SeeDeck />} />
-            <Route exact path="/test/id/:testID" element={<SeeTest />} />
-            <Route exact path="/user/id/:userID" element={
-              <ProtectedRoute>
-                <UserProfile />
-              </ProtectedRoute>
-            } />
-            <Route exact path="/create_deck" element={
-              <ProtectedRoute>
-                <CreateDeck />
-              </ProtectedRoute>
-            } />
-            <Route exact path="/create_test" element={
-              <ProtectedRoute>
-                <CreateTest />
-              </ProtectedRoute>
-            } />
-            <Route exact path="/deck/run/:deckID" element={
-              <ProtectedRoute>
-                <RunDeck />
-              </ProtectedRoute>
-            } />
-            <Route exact path="/test/run/:testID" element={
-              <ProtectedRoute>
-                <RunTest />
-              </ProtectedRoute>
-            } />
-            <Route exact path="/user/edit/:userID" element={
-              <ProtectedRoute>
-                <EditProfile />
-              </ProtectedRoute>
-            } />
-            <Route exact path="/deck/add_question/:deckID" element={
-              <ProtectedRoute>
-                <AddDeckQuestion />
-              </ProtectedRoute>
-            } />
-            <Route exact path="/test/add_test_question/:testID" element={
-              <ProtectedRoute>
-                <AddTestQuestion />
-              </ProtectedRoute>
-            } />
-            <Route exact path="/report" element={
-              <ProtectedRoute>
-                <Report />
-              </ProtectedRoute>
-            } />
-          </Routes>
+          <div style={{ minHeight: "100vh" }}>
+            <Routes>
+              <Route exact path="/" element={<Welcome />} />
+              <Route exact path="/login" element={<Login />} />
+              <Route exact path="/decks" element={<Decks />} />
+              <Route exact path="/tests" element={<Tests />} />
+              <Route exact path="/register" element={<Register />} />
+              <Route exact path="/deck/id/:deckID" element={<SeeDeck />} />
+              <Route exact path="/test/id/:testID" element={<SeeTest />} />
+              <Route exact path="/termsofservice" element={<TermsOfService />} />
+              <Route exact path="/user/id/:userID" element={
+                <ProtectedRoute>
+                  <UserProfile />
+                </ProtectedRoute>
+              } />
+              <Route exact path="/create_deck" element={
+                <ProtectedRoute>
+                  <CreateDeck />
+                </ProtectedRoute>
+              } />
+              <Route exact path="/create_test" element={
+                <ProtectedRoute>
+                  <CreateTest />
+                </ProtectedRoute>
+              } />
+              <Route exact path="/deck/run/:deckID" element={
+                <ProtectedRoute>
+                  <RunDeck />
+                </ProtectedRoute>
+              } />
+              <Route exact path="/test/run/:testID" element={
+                <ProtectedRoute>
+                  <RunTest />
+                </ProtectedRoute>
+              } />
+              <Route exact path="/user/edit/:userID" element={
+                <ProtectedRoute>
+                  <EditProfile />
+                </ProtectedRoute>
+              } />
+              <Route exact path="/deck/add_question/:deckID" element={
+                <ProtectedRoute>
+                  <AddDeckQuestion />
+                </ProtectedRoute>
+              } />
+              <Route exact path="/test/add_test_question/:testID" element={
+                <ProtectedRoute>
+                  <AddTestQuestion />
+                </ProtectedRoute>
+              } />
+              <Route exact path="/report" element={
+                <ProtectedRoute>
+                  <Report />
+                </ProtectedRoute>
+              } />
+            </Routes>
+          </div>
         </AppContext.Provider>
         <Footer />
       </Router>
